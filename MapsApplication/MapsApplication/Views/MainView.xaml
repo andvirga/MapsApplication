@@ -2,7 +2,7 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="MapsApplication.Views.MainView"
-             xmlns:maps="clr-namespace:Xamarin.Forms.Maps;assembly=Xamarin.Forms.Maps.dll">
+             xmlns:maps="clr-namespace:MapsApplication.CustomControls;assembly=MapsApplication">
 
   <Label Text="{Binding MainText}" VerticalOptions="Center" HorizontalOptions="Center" />
 
@@ -19,13 +19,14 @@
     <Label Text="Maps Application" TextColor="White" HorizontalOptions="Center"/>
     <Slider x:Name="zoomSlider" Minimum="0" Maximum="18" Value="9" ValueChanged="ChangeMapZoomLevel"/>
     <!--WidthRequest="500" HeightRequest="800"-->
-    <maps:Map
+    <maps:CustomMap
         x:Name="MyMap"
         IsShowingUser="true"
         MapType="Street"
         HorizontalOptions = "FillAndExpand"
         VerticalOptions   = "FillAndExpand"
-        />
+        >
+    </maps:CustomMap>
     <StackLayout Orientation="Horizontal"
                HorizontalOptions="FillAndExpand">
       <Button Clicked="ChangeToStreetView"    Text="Street"     FontSize="10" BackgroundColor="Blue"  TextColor="White"/>
@@ -38,9 +39,8 @@
                  VerticalOptions="Center">
       <Entry x:Name="txtAddress" Text="Alvear 1670, Rosario. Argentina" TextColor="Blue" BackgroundColor="White" FontSize="10" HorizontalOptions="Start" HeightRequest="10" WidthRequest="200"/>
       <Button x:Name="btnSearch"  Clicked="MoveToSpecificAddress" Text="Search" FontSize="10" />
-      <!--<Button x:Name="btnSearch2" Clicked="SearchPositionsWithGeoCoder" Text="Positions" FontSize="10" />-->
     </StackLayout>
-    
+
   </StackLayout>
 
 </ContentPage>

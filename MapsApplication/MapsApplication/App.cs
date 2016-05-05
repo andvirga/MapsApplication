@@ -14,7 +14,7 @@ namespace MapsApplication
         {
             // The root page of your application
             MainPage = new MainView();
-            //MainPage = new GeocoderPage();
+            //MainPage = new TapPage();
         }
 
         protected override void OnStart()

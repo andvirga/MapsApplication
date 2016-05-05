@@ -30,12 +30,25 @@ namespace MapsApplication.Views
         /// </summary>
         public void InitializeMap()
         {
+            //--Matching the event 'Tapped' with the method 'MyMap_Tapped'
+            MyMap.Tapped += MyMap_Tapped;
+
             double latitudeARG = -38.416097d;
             double longitudARG = -63.616672d;
 
             var mapSpan = MapSpan.FromCenterAndRadius(new Position(latitudeARG, longitudARG), Distance.FromKilometers(2000));
 
             this.MyMap.MoveToRegion(mapSpan);
+        }
+
+        /// <summary>
+        /// Map Tapped Event
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void MyMap_Tapped(object sender, CustomControls.MapTapEventArgs e)
+        {
+            this.GetNearestAddress(e);
         }
 
         /// <summary>
@@ -62,6 +75,11 @@ namespace MapsApplication.Views
             this.MyMap.MapType = MapType.Hybrid;
         }
 
+        /// <summary>
+        /// Changes the Zoom level in the map according the value of the Slider Control.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         public void ChangeMapZoomLevel(object sender, EventArgs e)
         {
             var zoomLevel = this.zoomSlider.Value; // between 1 and 18
@@ -126,31 +144,19 @@ namespace MapsApplication.Views
         }
 
         /// <summary>
-        /// Search the Address typed in the textbox.
+        /// Get the Nearest Address from a selected position.
         /// </summary>
-        public async void SearchAdressWithGeoCoder(object sender, EventArgs e)
+        /// <param name="mapArgs">MapTapEventArgs (Contains the Position)</param>
+        public async void GetNearestAddress(CustomControls.MapTapEventArgs mapArgs)
         {
-            var approximateLocations = await geocoder.GetPositionsForAddressAsync(this.txtAddress.Text);
-            string label = "Lat: {0} Long: {1}";
-            await DisplayAlert("Location Found!", String.Format(label, approximateLocations.First().Latitude, approximateLocations.First().Longitude), "Ok");
-        }
+            var approximateAddresses = await geocoder.GetAddressesForPositionAsync(mapArgs.Position);
 
-        /// <summary>
-        /// Search the Address related to a Position (Latitude and Longitude).
-        /// </summary>
-        public async void SearchPositionsWithGeoCoder(object sender, EventArgs e)
-        {
-            double latitude = 26.2055651d;
-            double longitude = -80.1513172d;
-
-            var position = new Position(latitude, longitude);
-
-            var approximateAddresses = await geocoder.GetAddressesForPositionAsync(position);
-            string label = "Address: {0}";
-            await DisplayAlert("Location Found!", String.Format(label, approximateAddresses.First().ToString()), "Ok");
+            if (approximateAddresses.Count() > 0)
+                await DisplayAlert("Message", String.Format("Nearest Address: {0}", approximateAddresses.First().ToString()), "Ok");
+            else
+                await DisplayAlert("D'Oh!", "No near addresses were found from this point", "Ok");
         }
 
         #endregion
-
     }
 }
